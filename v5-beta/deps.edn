@@ -1,0 +1,8 @@
+{:paths ["."]
+ :deps {clj-commons/clj-yaml {:mvn/version "0.7.108"}
+        babashka/fs          {:mvn/version "0.1.6"}}
+ :aliases
+ {:reveal-nrepl-middleware {:extra-deps {vlaaad/reveal {:mvn/version "RELEASE"}}
+                            :main-opts  ["-m" "nrepl.cmdline"
+                                         "--middleware" "[vlaaad.reveal.nrepl/middleware,cider.nrepl/cider-middleware]"]
+                            :jvm-opts ["-Dvlaaad.reveal.prefs={:theme,:light,:font-size,14}"]}}}
