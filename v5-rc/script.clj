@@ -50,11 +50,14 @@
   (let [current-path (:path (meta ref))
         path (get ref "$ref")
         cwd (relative-to-cwd current-path path)]
-    #_(tap> {:current-path current-path
-             :path path
-             :cwd cwd})
-    (walk/postwalk (partial attach-path-if-ref cwd)
-                   (slurp-yaml cwd))))
+    (tap> {:current-path current-path
+           :path path
+           :cwd cwd
+           :test (= current-path cwd)})
+    (if (= current-path cwd)
+      {"$recursive" current-path}
+      (walk/postwalk (partial attach-path-if-ref cwd)
+                     (slurp-yaml cwd)))))
 
 (defn path-key?
   [x]
@@ -69,6 +72,7 @@
 
 (defn walk-fn
   [form]
+  (tap> form)
   (cond
     (ref? form)
     (resolve-ref form)
