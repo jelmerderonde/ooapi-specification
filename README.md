@@ -1,7 +1,5 @@
 # Open Education API Specification
 
-![Open Education API](logo.png)
-
 This repository contains the [OpenAPI](https://github.com/OAI/OpenAPI-Specification) (fka Swagger) specification for the [Open Education API](https://openonderwijsapi.nl/en/).
 
 * [Versions](#versions)
@@ -19,15 +17,15 @@ This is the current version:
 
 * [v4](https://open-education-api.github.io/specification/v4/docs.html) (Current version - v4)
 
-The future v5 versions is available to preview in beta. This version is still under active development and will change. It is not yet suitable for implementation.
+The future v5 versions is available as a Release Candidate. This version is still under active development and will change. It is not yet suitable for implementation.
 
-* [v5](https://open-education-api.github.io/specification/v5-beta/docs.html) (Next version - v5)
+* [v5](https://open-education-api.github.io/specification/v5-rc/docs.html) (Next version - v5) [easy dev access](.v5-rc/docs.html)
 
 These are the previous versions:
 
-* [v3](https://open-education-api.github.io/specification/v3/docs.html) (Previous version - v3)
-* [v2](https://open-education-api.github.io/specification/v2/docs.html) (Previous version - v2)
-* [v1](https://open-education-api.github.io/specification/v1/docs.html) (Previous version - v1)
+* [v3](./v3/docs.html) (Previous version - v3)
+* [v2](./v2/docs.html) (Previous version - v2)
+* [v1](./v1/docs.html) (Previous version - v1)
 
 ## Operating area and Application
 
