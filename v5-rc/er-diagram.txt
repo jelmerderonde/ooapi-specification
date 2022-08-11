@@ -1,0 +1,336 @@
+erDiagram
+    EducationSpecification |o..o| EducationSpecification : hierarchic
+    EducationSpecification |o..o| Program : has
+    EducationSpecification |o..o| Course : has
+    Program |o..o| Program : hierarchic
+    Program ||..o{ ProgramOffering : has
+    ProgramOffering ||..o{ ProgramOfferingAssociation : has
+    ProgramOffering }o..o| AcademicSession : has
+    ProgramOfferingAssociation }o..|| Person : has
+    Program }o..o{ Course : has
+    Course ||..o{ CourseOffering : has
+    CourseOffering ||..o{ CourseOfferingAssociation : has
+    CourseOffering }o..o| AcademicSession : has
+    CourseOfferingAssociation }o..|| Person : has
+    Course }o..o{ Component : has
+    Component ||..o{ ComponentOffering : has
+    ComponentOffering ||..o{ ComponentOfferingAssociation : has
+    ComponentOffering }o..o| AcademicSession : has
+    ComponentOffering }o..o| Room : in
+    ComponentOfferingAssociation }o..|| Person : has
+    AcademicSession |o..o| AcademicSession : hierarchic
+    Organization |o..o{ EducationSpecification : has
+    Organization |o..o{ Program : has
+    Organization |o..o{ Course : has
+    Organization |o..o{ Component : has
+    Organization |o..o{ ProgramOffering : has
+    Organization |o..o{ CourseOffering : has
+    Organization |o..o{ ComponentOffering : has
+    Organization |o..o{ Group : has
+    Building |o..o{ Room : contains
+    Group }o..o{ Person : membership
+    Group }o..o{ ProgramOffering : has
+    Group }o..o{ CourseOffering : has
+    Group }o..o{ ComponentOffering : has
+    NewsFeed }|..o{ NewsItem : has
+    Organization |o..o| Organization : hierarchic
+    AcademicSession {
+        string academicSessionId
+        unknown academicSessionType
+        array name
+        string endDate
+        string startDate
+    }
+    Building {
+        string buildingId
+        unknown primaryCode
+        array otherCodes
+        array name
+        string abbreviation
+        array description
+        unknown address
+    }
+    Component {
+        string componentId
+        unknown primaryCode
+        array otherCodes
+        unknown componentType
+        array name
+        string abbreviation
+        array description
+        array addresses
+        array assessment
+        string duration
+        array enrollment
+        array learningOutcomes
+        unknown modeOfDelivery
+        array resources
+        string teachingLanguage
+    }
+    ComponentOffering {
+        string offeringId
+        unknown primaryCode
+        array otherCodes
+        string offeringType
+        array name
+        string abbreviation
+        array description
+        array addresses
+        string endDateTime
+        number enrolledNumberStudents
+        string enrollEndDate
+        string enrollStartDate
+        string link
+        number maxNumberStudents
+        number minNumberStudents
+        unknown modeOfDelivery
+        number pendingNumberStudents
+        array priceInformation
+        boolean resultExpected
+        unknown resultValueType
+        integer resultWeight
+        string startDateTime
+        string teachingLanguage
+    }
+    ComponentOfferingAssociation {
+        string associationId
+        string associationType
+        unknown remoteState
+        unknown result
+        unknown role
+        unknown state
+    }
+    Course {
+        string courseId
+        unknown primaryCode
+        array otherCodes
+        array name
+        string abbreviation
+        array description
+        array addresses
+        array admissionRequirements
+        array assessment
+        string duration
+        array enrollment
+        string fieldsOfStudy
+        string firstStartDate
+        array learningOutcomes
+        unknown level
+        string link
+        unknown modeOfDelivery
+        array qualificationRequirements
+        array resources
+        unknown studyLoad
+        string teachingLanguage
+        string validFrom
+        string validTo
+    }
+    CourseOffering {
+        string offeringId
+        unknown primaryCode
+        array otherCodes
+        string offeringType
+        array name
+        string abbreviation
+        array description
+        array addresses
+        string endDate
+        number enrolledNumberStudents
+        string enrollEndDate
+        string enrollStartDate
+        string flexibleEntryPeriodEnd
+        string flexibleEntryPeriodStart
+        string link
+        number maxNumberStudents
+        number minNumberStudents
+        unknown modeOfDelivery
+        number pendingNumberStudents
+        array priceInformation
+        boolean resultExpected
+        unknown resultValueType
+        string startDate
+        string teachingLanguage
+    }
+    CourseOfferingAssociation {
+        string associationId
+        string associationType
+        unknown remoteState
+        unknown result
+        unknown role
+        unknown state
+    }
+    EducationSpecification {
+        string educationSpecificationId
+        unknown primaryCode
+        array otherCodes
+        unknown educationSpecificationType
+        array name
+        string abbreviation
+        array description
+        string fieldsOfStudy
+        unknown formalDocument
+        array learningOutcomes
+        unknown level
+        unknown levelOfQualification
+        string link
+        unknown sector
+        unknown studyLoad
+        string validFrom
+        string validTo
+    }
+    Group {
+        string groupId
+        unknown primaryCode
+        array otherCodes
+        unknown groupType
+        array name
+        array description
+        string endDate
+        number personCount
+        string startDate
+    }
+    NewsFeed {
+        string newsFeedId
+        string newsFeedType
+        array name
+        array description
+    }
+    NewsItem {
+        string newsItemId
+        unknown newsItemType
+        array name
+        array authors
+        array content
+        string image
+        string lastModified
+        string link
+        string validFrom
+        string validUntil
+    }
+    Organization {
+        string organizationId
+        unknown primaryCode
+        array otherCodes
+        unknown organizationType
+        array name
+        string shortName
+        array description
+        array addresses
+        string link
+        string logo
+    }
+    Person {
+        string personId
+        unknown primaryCode
+        array otherCodes
+        string surname
+        string surnamePrefix
+        string givenName
+        string displayName
+        string titlePrefix
+        string titleSuffix
+        boolean activeEnrollment
+        unknown address
+        unknown affiliations
+        string cityOfBirth
+        string countryOfBirth
+        string dateOfBirth
+        string dateOfNationality
+        unknown gender
+        string ICEName
+        string ICEPhoneNumber
+        unknown ICERelation
+        string initials
+        array languageOfChoice
+        string mail
+        string mobileNumber
+        string nationality
+        string office
+        string photoOfficial
+        string photoSocial
+        string secondaryMail
+        string telephoneNumber
+    }
+    Program {
+        string programId
+        unknown primaryCode
+        array otherCodes
+        unknown programType
+        array name
+        string abbreviation
+        array description
+        array addresses
+        array admissionRequirements
+        array assessment
+        string duration
+        array enrollment
+        string fieldsOfStudy
+        string firstStartDate
+        array learningOutcomes
+        unknown level
+        unknown levelOfQualification
+        string link
+        unknown modeOfDelivery
+        unknown modeOfStudy
+        unknown qualificationAwarded
+        array qualificationRequirements
+        array resources
+        unknown sector
+        unknown studyLoad
+        string teachingLanguage
+        string validFrom
+        string validTo
+    }
+    ProgramOffering {
+        string offeringId
+        unknown primaryCode
+        array otherCodes
+        string offeringType
+        array name
+        string abbreviation
+        array description
+        array addresses
+        string endDate
+        number enrolledNumberStudents
+        string enrollEndDate
+        string enrollStartDate
+        string flexibleEntryPeriodEnd
+        string flexibleEntryPeriodStart
+        string link
+        number maxNumberStudents
+        number minNumberStudents
+        unknown modeOfDelivery
+        number pendingNumberStudents
+        array priceInformation
+        boolean resultExpected
+        unknown resultValueType
+        string startDate
+        string teachingLanguage
+    }
+    ProgramOfferingAssociation {
+        string associationId
+        string associationType
+        unknown remoteState
+        unknown result
+        unknown role
+        unknown state
+    }
+    Room {
+        string roomId
+        unknown primaryCode
+        array otherCodes
+        unknown roomType
+        array name
+        string abbreviation
+        array description
+        integer availableSeats
+        string floor
+        object geolocation
+        integer totalSeats
+        string wing
+    }
+    Service {
+        string contactEmail
+        string documentation
+        string specification
+    }
