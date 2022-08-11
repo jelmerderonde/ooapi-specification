@@ -3,12 +3,14 @@ erDiagram
     EducationSpecification |o..o| Program : has
     EducationSpecification |o..o| Course : has
     Program |o..o| Program : hierarchic
+    Program }o..o{ Person : coordinator
     Program ||..o{ ProgramOffering : has
     ProgramOffering ||..o{ ProgramOfferingAssociation : has
     ProgramOffering }o..o| AcademicSession : has
     ProgramOfferingAssociation }o..|| Person : has
     Program }o..o{ Course : has
     Course ||..o{ CourseOffering : has
+    Course }o..o{ Person : coordinator
     CourseOffering ||..o{ CourseOfferingAssociation : has
     CourseOffering }o..o| AcademicSession : has
     CourseOfferingAssociation }o..|| Person : has

@@ -1,0 +1,337 @@
+[AcademicSession]
+academicSessionId
+academicSessionType
+name
+endDate
+startDate
+
+[Building]
+buildingId
+primaryCode
+otherCodes
+name
+abbreviation
+description
+address
+
+[Component]
+componentId
+primaryCode
+otherCodes
+componentType
+name
+abbreviation
+description
+addresses
+assessment
+duration
+enrollment
+learningOutcomes
+modeOfDelivery
+resources
+teachingLanguage
+
+[ComponentOffering]
+offeringId
+primaryCode
+otherCodes
+offeringType
+name
+abbreviation
+description
+addresses
+endDateTime
+enrolledNumberStudents
+enrollEndDate
+enrollStartDate
+link
+maxNumberStudents
+minNumberStudents
+modeOfDelivery
+pendingNumberStudents
+priceInformation
+resultExpected
+resultValueType
+resultWeight
+startDateTime
+teachingLanguage
+
+[ComponentOfferingAssociation]
+associationId
+associationType
+remoteState
+result
+role
+state
+
+[Course]
+courseId
+primaryCode
+otherCodes
+name
+abbreviation
+description
+addresses
+admissionRequirements
+assessment
+duration
+enrollment
+fieldsOfStudy
+firstStartDate
+learningOutcomes
+level
+link
+modeOfDelivery
+qualificationRequirements
+resources
+studyLoad
+teachingLanguage
+validFrom
+validTo
+
+[CourseOffering]
+offeringId
+primaryCode
+otherCodes
+offeringType
+name
+abbreviation
+description
+addresses
+endDate
+enrolledNumberStudents
+enrollEndDate
+enrollStartDate
+flexibleEntryPeriodEnd
+flexibleEntryPeriodStart
+link
+maxNumberStudents
+minNumberStudents
+modeOfDelivery
+pendingNumberStudents
+priceInformation
+resultExpected
+resultValueType
+startDate
+teachingLanguage
+
+[CourseOfferingAssociation]
+associationId
+associationType
+remoteState
+result
+role
+state
+
+[EducationSpecification]
+educationSpecificationId
+primaryCode
+otherCodes
+educationSpecificationType
+name
+abbreviation
+description
+fieldsOfStudy
+formalDocument
+learningOutcomes
+level
+levelOfQualification
+link
+sector
+studyLoad
+validFrom
+validTo
+
+[Group]
+groupId
+primaryCode
+otherCodes
+groupType
+name
+description
+endDate
+personCount
+startDate
+
+[NewsFeed]
+newsFeedId
+newsFeedType
+name
+description
+
+[NewsItem]
+newsItemId
+newsItemType
+name
+authors
+content
+image
+lastModified
+link
+validFrom
+validUntil
+
+[Organization]
+organizationId
+primaryCode
+otherCodes
+organizationType
+name
+shortName
+description
+addresses
+link
+logo
+
+[Person]
+personId
+primaryCode
+otherCodes
+surname
+surnamePrefix
+givenName
+displayName
+titlePrefix
+titleSuffix
+activeEnrollment
+address
+affiliations
+cityOfBirth
+countryOfBirth
+dateOfBirth
+dateOfNationality
+gender
+ICEName
+ICEPhoneNumber
+ICERelation
+initials
+languageOfChoice
+mail
+mobileNumber
+nationality
+office
+photoOfficial
+photoSocial
+secondaryMail
+telephoneNumber
+
+[Program]
+programId
+primaryCode
+otherCodes
+programType
+name
+abbreviation
+description
+addresses
+admissionRequirements
+assessment
+duration
+enrollment
+fieldsOfStudy
+firstStartDate
+learningOutcomes
+level
+levelOfQualification
+link
+modeOfDelivery
+modeOfStudy
+qualificationAwarded
+qualificationRequirements
+resources
+sector
+studyLoad
+teachingLanguage
+validFrom
+validTo
+
+[ProgramOffering]
+offeringId
+primaryCode
+otherCodes
+offeringType
+name
+abbreviation
+description
+addresses
+endDate
+enrolledNumberStudents
+enrollEndDate
+enrollStartDate
+flexibleEntryPeriodEnd
+flexibleEntryPeriodStart
+link
+maxNumberStudents
+minNumberStudents
+modeOfDelivery
+pendingNumberStudents
+priceInformation
+resultExpected
+resultValueType
+startDate
+teachingLanguage
+
+[ProgramOfferingAssociation]
+associationId
+associationType
+remoteState
+result
+role
+state
+
+[Room]
+roomId
+primaryCode
+otherCodes
+roomType
+name
+abbreviation
+description
+availableSeats
+floor
+geolocation
+totalSeats
+wing
+
+[Service]
+contactEmail
+documentation
+specification
+
+EducationSpecification ?--? EducationSpecification
+EducationSpecification ?--? Program
+EducationSpecification ?--? Course
+Program ?--? Program
+Program *--* Person
+Program 1--* ProgramOffering
+ProgramOffering 1--* ProgramOfferingAssociation
+ProgramOffering *--? AcademicSession
+ProgramOfferingAssociation *--1 Person
+Program *--* Course
+Course 1--* CourseOffering
+Course *--* Person
+CourseOffering 1--* CourseOfferingAssociation
+CourseOffering *--? AcademicSession
+CourseOfferingAssociation *--1 Person
+Course *--* Component
+Component 1--* ComponentOffering
+ComponentOffering 1--* ComponentOfferingAssociation
+ComponentOffering *--? AcademicSession
+ComponentOffering *--? Room
+ComponentOfferingAssociation *--1 Person
+AcademicSession ?--? AcademicSession
+Organization ?--* EducationSpecification
+Organization ?--* Program
+Organization ?--* Course
+Organization ?--* Component
+Organization ?--* ProgramOffering
+Organization ?--* CourseOffering
+Organization ?--* ComponentOffering
+Organization ?--* Group
+Building ?--* Room
+Group *--* Person
+Group *--* ProgramOffering
+Group *--* CourseOffering
+Group *--* ComponentOffering
+NewsFeed +--* NewsItem
+Organization ?--? Organization

@@ -215,3 +215,39 @@
        (str/join "\n" (map er-entitity entities))))
 
 (spit "er-diagram.txt" (er-diagram))
+
+(def erd-relationship-types
+  {:? "?" ;; Zero or one
+   :1 "1" ;; Exactly one
+   :* "*" ;; Zero or more (no upper limit)
+   :+ "+"}) ;; One or more (no upper limit)
+
+(defn erd-str-props
+  [[name _]]
+  (str name))
+
+(defn erd-entity
+  [{:keys [name file]}]
+  (let [props (->> (properties file)
+                   (remove (comp always-remove key))
+                   (sort-by (fn [[k _]] (get preferred-order k))))
+        str-props (str/join "\n" (map erd-str-props props))]
+    (str "[" name "]\n" str-props "\n")))
+
+(defn erd-relation
+  [[name1 rel name2 _label]]
+  (str name1
+       " "
+       (get erd-relationship-types (first rel))
+       "--"
+       (get erd-relationship-types (second rel))
+       " "
+       name2))
+
+(defn erd-diagram
+  []
+  (str (str/join "\n" (map erd-entity entities))
+       "\n"
+       (str/join "\n" (map erd-relation relations))))
+
+(spit "erd-diagram.txt" (erd-diagram))
