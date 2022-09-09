@@ -115,6 +115,12 @@
    :* ["}o" "o{"] ;; Zero or more (no upper limit)
    :+ ["}|" "|{"]}) ;; One or more (no upper limit)
 
+:- ; normal
+:ext ; extends
+:comp ; composition
+
+; https://kroki.io/
+
 (def relations
   [["EducationSpecification" [:? :?] "EducationSpecification" "hierarchic"]
    ["EducationSpecification" [:? :?] "Program" "has"]
