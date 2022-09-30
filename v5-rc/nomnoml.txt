@@ -1,0 +1,290 @@
+[Education
+|
+primaryCode: unknown
+otherCodes: array
+name: array
+abbreviation: string
+description: array
+addresses: array
+assessment: array
+duration: string
+enrollment: array
+learningOutcomes: array
+modeOfDelivery: unknown
+resources: array
+teachingLanguage: string]
+
+[Program
+|
+programId: string
+programType: unknown
+admissionRequirements: array
+fieldsOfStudy: string
+firstStartDate: string
+level: unknown
+levelOfQualification: unknown
+link: string
+modeOfStudy: unknown
+qualificationAwarded: unknown
+qualificationRequirements: array
+sector: unknown
+studyLoad: unknown
+validFrom: string
+validTo: string]
+
+[Course
+|
+courseId: string
+admissionRequirements: array
+fieldsOfStudy: string
+firstStartDate: string
+level: unknown
+link: string
+qualificationRequirements: array
+studyLoad: unknown
+validFrom: string
+validTo: string]
+
+[Component
+|
+componentId: string
+componentType: unknown]
+
+[Offering
+|
+offeringId: string
+primaryCode: unknown
+otherCodes: array
+offeringType: string
+name: array
+abbreviation: string
+description: array
+addresses: array
+enrolledNumberStudents: number
+enrollEndDate: string
+enrollStartDate: string
+link: string
+maxNumberStudents: number
+minNumberStudents: number
+modeOfDelivery: unknown
+pendingNumberStudents: number
+priceInformation: array
+resultExpected: boolean
+resultValueType: unknown
+teachingLanguage: string]
+
+[ProgramOffering
+|
+endDate: string
+flexibleEntryPeriodEnd: string
+flexibleEntryPeriodStart: string
+startDate: string]
+
+[CourseOffering
+|
+endDate: string
+flexibleEntryPeriodEnd: string
+flexibleEntryPeriodStart: string
+startDate: string]
+
+[ComponentOffering
+|
+endDateTime: string
+resultWeight: integer
+startDateTime: string]
+
+[Association
+|
+associationId: string
+associationType: string
+remoteState: unknown
+result: unknown
+role: unknown
+state: unknown]
+
+[AcademicSession
+|
+academicSessionId: string
+academicSessionType: unknown
+name: array
+endDate: string
+startDate: string]
+
+[Building
+|
+buildingId: string
+primaryCode: unknown
+otherCodes: array
+name: array
+abbreviation: string
+description: array
+address: unknown]
+
+[EducationSpecification
+|
+educationSpecificationId: string
+primaryCode: unknown
+otherCodes: array
+educationSpecificationType: unknown
+name: array
+abbreviation: string
+description: array
+fieldsOfStudy: string
+formalDocument: unknown
+learningOutcomes: array
+level: unknown
+levelOfQualification: unknown
+link: string
+sector: unknown
+studyLoad: unknown
+validFrom: string
+validTo: string]
+
+[Group
+|
+groupId: string
+primaryCode: unknown
+otherCodes: array
+groupType: unknown
+name: array
+description: array
+endDate: string
+personCount: number
+startDate: string]
+
+[NewsFeed
+|
+newsFeedId: string
+newsFeedType: string
+name: array
+description: array]
+
+[NewsItem
+|
+newsItemId: string
+newsItemType: unknown
+name: array
+authors: array
+content: array
+image: string
+lastModified: string
+link: string
+validFrom: string
+validUntil: string]
+
+[Organization
+|
+organizationId: string
+primaryCode: unknown
+otherCodes: array
+organizationType: unknown
+name: array
+shortName: string
+description: array
+addresses: array
+link: string
+logo: string]
+
+[Person
+|
+personId: string
+primaryCode: unknown
+otherCodes: array
+surname: string
+surnamePrefix: string
+givenName: string
+displayName: string
+titlePrefix: string
+titleSuffix: string
+activeEnrollment: boolean
+address: unknown
+affiliations: unknown
+cityOfBirth: string
+countryOfBirth: string
+dateOfBirth: string
+dateOfNationality: string
+gender: unknown
+ICEName: string
+ICEPhoneNumber: string
+ICERelation: unknown
+initials: string
+languageOfChoice: array
+mail: string
+mobileNumber: string
+nationality: string
+office: string
+photoOfficial: string
+photoSocial: string
+secondaryMail: string
+telephoneNumber: string]
+
+[Room
+|
+roomId: string
+primaryCode: unknown
+otherCodes: array
+roomType: unknown
+name: array
+abbreviation: string
+description: array
+availableSeats: integer
+floor: string
+geolocation: object
+totalSeats: integer
+wing: string]
+
+[Service
+|
+contactEmail: string
+documentation: string
+specification: string]
+
+[EducationSpecification] 0..1 - 0..* [Education]
+
+[EducationSpecification] 0..1 - 0..1 [EducationSpecification]
+
+[Program] 0..1 - 0..1 [Program]
+
+[Program] -:> [Education]
+
+[Course] -:> [Education]
+
+[Component] -:> [Education]
+
+[Education] coordinator -  [Person]
+
+[ProgramOffering] -:> [Offering]
+
+[CourseOffering] -:> [Offering]
+
+[ComponentOffering] -:> [Offering]
+
+[Education] 1 - 0..* [Offering]
+
+[Offering] 1 - 0..* [Association]
+
+[Association] 1 - 0..* [Person]
+
+[Offering] - [AcademicSession]
+
+[AcademicSession] - [AcademicSession]
+
+[ComponentOffering] - [Room]
+
+[Organization] - [EducationSpecification]
+
+[Organization] - [Education]
+
+[Organization] - [Offering]
+
+[Organization] - [Group]
+
+[Organization] - [Organization]
+
+[Building] - [Room]
+
+[Group] - [Person]
+
+[Group] - [Offering]
+
+[NewsFeed] - [NewsItem]

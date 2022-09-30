@@ -4,6 +4,7 @@
    [clj-yaml.core :as yaml]
    [clojure.walk :as walk]
    [clojure.string :as str]
+   [clojure.set :as set]
    [babashka.fs :as fs]))
 
 (def spec-file (io/file "spec.yaml"))
@@ -69,23 +70,47 @@
                   new-schema (assoc (slurp-yaml new-path) :path new-path)]
               (recur (conj (rest schemas) new-schema) props))))))))
 
-(def entities
-  [{:name "AcademicSession"
+(def component-specifications
+  [{:name "Education"
+    :generalizes #{"Program" "Course" "Component"}}
+   {:name "Program"
+    :file "schemas/Program.yaml"
+    :extends "Education"}
+   {:name "Course"
+    :file "schemas/Course.yaml"
+    :extends "Education"}
+   {:name "Component"
+    :file "schemas/Component.yaml"
+    :extends "Education"}
+
+   {:name "Offering"
+    :generalizes #{"ProgramOffering" "CourseOffering" "ComponentOffering"}}
+   {:name "ProgramOffering"
+    :file "schemas/ProgramOffering.yaml"
+    :extends "Offering"}
+   {:name "CourseOffering"
+    :file "schemas/CourseOffering.yaml"
+    :extends "Offering"}
+   {:name "ComponentOffering"
+    :file "schemas/ComponentOffering.yaml"
+    :extends "Offering"}
+
+   {:name "Association"
+    :generalizes #{"ProgramOfferingAssociation" "CourseOfferingAssociation" "ComponentOfferingAssociation"}}
+   {:name "ProgramOfferingAssociation"
+    :file "schemas/ProgramOfferingAssociation.yaml"
+    :extends "Association"}
+   {:name "CourseOfferingAssociation"
+    :file "schemas/CourseOfferingAssociation.yaml"
+    :extends "Association"}
+   {:name "ComponentOfferingAssociation"
+    :file "schemas/ComponentOfferingAssociation.yaml"
+    :extends "Association"}
+
+   {:name "AcademicSession"
     :file "schemas/AcademicSession.yaml"}
    {:name "Building"
     :file "schemas/Building.yaml"}
-   {:name "Component"
-    :file "schemas/Component.yaml"}
-   {:name "ComponentOffering"
-    :file "schemas/ComponentOffering.yaml"}
-   {:name "ComponentOfferingAssociation"
-    :file "schemas/ComponentOfferingAssociation.yaml"}
-   {:name "Course"
-    :file "schemas/Course.yaml"}
-   {:name "CourseOffering"
-    :file "schemas/CourseOffering.yaml"}
-   {:name "CourseOfferingAssociation"
-    :file "schemas/CourseOfferingAssociation.yaml"}
    {:name "EducationSpecification"
     :file "schemas/EducationSpecification.yaml"}
    {:name "Group"
@@ -98,67 +123,65 @@
     :file "schemas/Organization.yaml"}
    {:name "Person"
     :file "schemas/Person.yaml"}
-   {:name "Program"
-    :file "schemas/Program.yaml"}
-   {:name "ProgramOffering"
-    :file "schemas/ProgramOffering.yaml"}
-   {:name "ProgramOfferingAssociation"
-    :file "schemas/ProgramOfferingAssociation.yaml"}
    {:name "Room"
     :file "schemas/Room.yaml"}
    {:name "Service"
     :file "schemas/Service.yaml"}])
 
-(def relationship-types
-  {:? ["|o" "o|"] ;; Zero or one
-   :1 ["||" "||"] ;; Exactly one
-   :* ["}o" "o{"] ;; Zero or more (no upper limit)
-   :+ ["}|" "|{"]}) ;; One or more (no upper limit)
+(defn components-by-name
+  [components]
+  (reduce
+   (fn [m comp] (assoc m (:name comp) comp))
+   {}
+   components))
 
-:- ; normal
-:ext ; extends
-:comp ; composition
+(defn add-properties-from-file
+  [component]
+  (if-let [file (:file component)]
+    (assoc component :properties (properties file))
+    component))
 
-; https://kroki.io/
+(defn merge-generalization-properties
+  [index component]
+  (if-let [generalizes (:generalizes component)]
+    (let [all-properties (map (fn [comp-name] (get-in index [comp-name :properties])) generalizes)
+          merged-properties (apply merge all-properties)
+          overlap (apply set/intersection (map (comp set keys) all-properties))
+          properties (->> overlap
+                          (map (fn [prop-name] [prop-name (get merged-properties prop-name)]))
+                          (into {}))]
+      (assoc component :properties properties))
+    component))
 
-(def relations
-  [["EducationSpecification" [:? :?] "EducationSpecification" "hierarchic"]
-   ["EducationSpecification" [:? :?] "Program" "has"]
-   ["EducationSpecification" [:? :?] "Course" "has"]
-   ["Program" [:? :?] "Program" "hierarchic"]
-   ["Program" [:* :*] "Person" "coordinator"]
-   ["Program" [:1 :*] "ProgramOffering" "has"]
-   ["ProgramOffering" [:1 :*] "ProgramOfferingAssociation" "has"]
-   ["ProgramOffering" [:* :?] "AcademicSession" "has"]
-   ["ProgramOfferingAssociation" [:* :1] "Person" "has"]
-   ["Program" [:* :*] "Course" "has"]
-   ["Course" [:1 :*] "CourseOffering" "has"]
-   ["Course" [:* :*] "Person" "coordinator"]
-   ["CourseOffering" [:1 :*] "CourseOfferingAssociation" "has"]
-   ["CourseOffering" [:* :?] "AcademicSession" "has"]
-   ["CourseOfferingAssociation" [:* :1] "Person" "has"]
-   ["Course" [:* :*] "Component" "has"]
-   ["Component" [:1 :*] "ComponentOffering" "has"]
-   ["ComponentOffering" [:1 :*] "ComponentOfferingAssociation" "has"]
-   ["ComponentOffering" [:* :?] "AcademicSession" "has"]
-   ["ComponentOffering" [:* :?] "Room" "in"]
-   ["ComponentOfferingAssociation" [:* :1] "Person" "has"]
-   ["AcademicSession" [:? :?] "AcademicSession" "hierarchic"]
-   ["Organization" [:? :*] "EducationSpecification" "has"]
-   ["Organization" [:? :*] "Program" "has"]
-   ["Organization" [:? :*] "Course" "has"]
-   ["Organization" [:? :*] "Component" "has"]
-   ["Organization" [:? :*] "ProgramOffering" "has"]
-   ["Organization" [:? :*] "CourseOffering" "has"]
-   ["Organization" [:? :*] "ComponentOffering" "has"]
-   ["Organization" [:? :*] "Group" "has"]
-   ["Building" [:? :*] "Room" "contains"]
-   ["Group" [:* :*] "Person" "membership"]
-   ["Group" [:* :*] "ProgramOffering" "has"]
-   ["Group" [:* :*] "CourseOffering" "has"]
-   ["Group" [:* :*] "ComponentOffering" "has"]
-   ["NewsFeed" [:+ :*] "NewsItem" "has"]
-   ["Organization" [:? :?] "Organization" "hierarchic"]])
+(defn merge-all-generalization-properties
+  [components]
+  (let [index (components-by-name components)]
+    (map (partial merge-generalization-properties index) components)))
+
+(defn clean-extend-properties
+  [index component]
+  (if-let [extends (:extends component)]
+    (let [remove-set (->> (get-in index [extends :properties])
+                          keys
+                          (into #{}))
+          properties (:properties component)
+          cleaned-properties (->> properties
+                                  (remove (fn [[k _]] (contains? remove-set k)))
+                                  (into {}))]
+      (assoc component :properties cleaned-properties))
+    component))
+
+(defn clean-all-extend-properties
+  [components]
+  (let [index (components-by-name components)]
+    (map (partial clean-extend-properties index) components)))
+
+(def components
+  (->> component-specifications
+       (map add-properties-from-file)
+       (merge-all-generalization-properties)
+       (clean-all-extend-properties)
+       (remove (fn [{:keys [properties]}] (empty? properties)))))
 
 (def always-remove
   #{"academicSession" "building" "children" "component" "consumers" "coordinators" "course" "courseOffering" "educationSpecification" "ext" "newsFeeds" "organization" "parent" "program" "programOffering" "programs" "room" "year"})
@@ -179,81 +202,69 @@
    "role"   "secondaryMail"   "sector"   "specification"   "startDate"   "startDateTime"   "state"   "studyLoad"   "teachingLanguage"   "telephoneNumber"
    "totalSeats"   "validFrom"   "validTo"   "validUntil"   "wing"])
 
-(def ind "    ")
-
-(defn str-prop
-  [[name attrs]]
-  (str ind ind (get attrs "type" "unknown") " " name))
-
 (def preferred-order
   (apply hash-map (interleave preferred-ordering (range))))
 
-(->> (properties "./schemas/Program.yaml")
-     (remove (comp always-remove key))
-     (sort-by (fn [[k _]] (get preferred-order k))))
+(defn str-prop
+  [[name attrs]]
+  (str name ": " (get attrs "type" "unknown")))
 
-(defn er-entitity
-  [{:keys [name file]}]
-  (let [props (->> (properties file)
+(defn render-component
+  [component]
+  (let [props (->> (:properties component)
                    (remove (comp always-remove key))
                    (sort-by (fn [[k _]] (get preferred-order k))))
         str-props (str/join "\n" (map str-prop props))]
-    (str ind name " {\n" str-props  "\n" ind "}")))
+    (str "[" (:name component)
+         "\n|\n"
+         str-props
+         "]")))
 
-(defn er-relation
-  [[name1 rel name2 label]]
-  (str ind
-       name1
-       " "
-       (first (get relationship-types (first rel)))
-       ".."
-       (second (get relationship-types (second rel)))
-       " "
-       name2
-       " : "
-       label))
+(def relations
+  [["EducationSpecification" "0..1 - 0..*" "Education"]
+   ["EducationSpecification" "0..1 - 0..1" "EducationSpecification"]
 
-(defn er-diagram
+   ["Program" "0..1 - 0..1" "Program"]
+   ["Program" "-:>" "Education"]
+   ["Course" "-:>" "Education"]
+   ["Component" "-:>" "Education"]
+
+   ["Education" "coordinator - " "Person"]
+
+   ["ProgramOffering" "-:>" "Offering"]
+   ["CourseOffering" "-:>" "Offering"]
+   ["ComponentOffering" "-:>" "Offering"]
+   ["Education" "1 - 0..*" "Offering"]
+   ["Offering" "1 - 0..*" "Association"]
+   ["Association" "1 - 0..*" "Person"]
+
+   ["Offering" "-" "AcademicSession"]
+   ["AcademicSession" "-" "AcademicSession"]
+
+   ["ComponentOffering" "-" "Room"]
+
+
+   ["Organization" "-" "EducationSpecification"]
+   ["Organization" "-" "Education"]
+   ["Organization" "-" "Offering"]
+   ["Organization" "-" "Group"]
+   ["Organization" "-" "Organization"]
+
+   ["Building" "-" "Room"]
+
+   ["Group" "-" "Person"]
+   ["Group" "-" "Offering"]
+
+   ["NewsFeed" "-" "NewsItem"]])
+
+(defn render-relation
+  [[from conn to]]
+  (str "[" from "] " conn " [" to "]"))
+
+(defn render
   []
-  (str "erDiagram\n"
-       (str/join "\n" (map er-relation relations))
-       "\n"
-       (str/join "\n" (map er-entitity entities))))
+  (str (str/join "\n\n" (map render-component components))
+       "\n\n"
+       (str/join "\n\n" (map render-relation relations))))
 
-(spit "er-diagram.txt" (er-diagram))
-
-(def erd-relationship-types
-  {:? "?" ;; Zero or one
-   :1 "1" ;; Exactly one
-   :* "*" ;; Zero or more (no upper limit)
-   :+ "+"}) ;; One or more (no upper limit)
-
-(defn erd-str-props
-  [[name _]]
-  (str name))
-
-(defn erd-entity
-  [{:keys [name file]}]
-  (let [props (->> (properties file)
-                   (remove (comp always-remove key))
-                   (sort-by (fn [[k _]] (get preferred-order k))))
-        str-props (str/join "\n" (map erd-str-props props))]
-    (str "[" name "]\n" str-props "\n")))
-
-(defn erd-relation
-  [[name1 rel name2 _label]]
-  (str name1
-       " "
-       (get erd-relationship-types (first rel))
-       "--"
-       (get erd-relationship-types (second rel))
-       " "
-       name2))
-
-(defn erd-diagram
-  []
-  (str (str/join "\n" (map erd-entity entities))
-       "\n"
-       (str/join "\n" (map erd-relation relations))))
-
-(spit "erd-diagram.txt" (erd-diagram))
+(spit "nomnoml.txt" (render))
