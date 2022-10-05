@@ -253,6 +253,10 @@ Notes:
 
 ### **AangebodenHoOpleidingsonderdeel**
 
+Notes:
+- *The type of the `educationSpecification` this program refers to, determines whether this Program will be mapped to a AangebodenHoOpleiding, AangebodenHoOpleidingsonderdeel or AangebodenParticuliereOpleiding*
+- *Cohorten will be mapped from the offerings belonging to the Program in question.*
+
 | Program                                              | AangebodenHoOpleidingsonderdeel                 | Enumeration mapping                                          | Remarks                                                                                                                                                        |
 | ---------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | programId [*]                                        | aangebodenOpleidingCode [1]                     |                                                              |                                                                                                                                                                |
@@ -280,6 +284,10 @@ Notes:
 > OOAPI fields marked with `[*]` are required fields in the OOAPI specification.
 
 ### **AangebodenParticuliereOpleiding**
+
+Notes:
+- *The type of the `educationSpecification` this program refers to, determines whether this Program will be mapped to a AangebodenHoOpleiding, AangebodenHoOpleidingsonderdeel or AangebodenParticuliereOpleiding*
+- *Cohorten will be mapped from the offerings belonging to the Program in question.*
 
 | Program                                              | AangebodenParticuliereOpleiding (Non-formeel)   | Enumeration                                                  | Remarks                                                                                                                                                        |
 | ---------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |

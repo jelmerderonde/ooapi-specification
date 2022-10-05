@@ -24,7 +24,7 @@ When an attribute contains the given search term (exact partial match, case-inse
 
 ## Filtering items meant for a specific consumer using `consumer`
 
-Clients can filter items meant for a specific consumer using the query parameter `consumer`, e.g. `consumer=rio`. See for more information []
+Clients can filter items meant for a specific consumer using the query parameter `consumer`, e.g. `consumer=rio`. See the [consumers documentation](technical/consumers-and-profiles/) for more information.
 
 ## Filtering on other entity-specific attributes
 

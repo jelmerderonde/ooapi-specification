@@ -50,4 +50,3 @@ Furthermore, educational institutes that want to publish education data in a sta
 ## Interested in joining us?
 
 Are you an educational institute and interested in having the OOAPI developed to suit your needs? Then why not join us. For more information, please access the [Community](community/) link.
-
