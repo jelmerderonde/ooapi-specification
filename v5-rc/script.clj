@@ -14,7 +14,7 @@
   (yaml/parse-string (slurp path)
                      :keywords false))
 
-(def top-level-spec (slurp-yaml spec-file))
+;;(def top-level-spec (slurp-yaml spec-file))
 
 (defn ref?
   [form]
@@ -73,27 +73,38 @@
 (def component-specifications
   [{:name "Education"
     :generalizes #{"Program" "Course" "Component"}}
+
    {:name "Program"
     :file "schemas/Program.yaml"
-    :extends "Education"}
+    :extends "Education"
+    :group "Educations"}
    {:name "Course"
     :file "schemas/Course.yaml"
-    :extends "Education"}
+    :extends "Education"
+    :group "Educations"}
    {:name "Component"
     :file "schemas/Component.yaml"
-    :extends "Education"}
+    :extends "Education"
+    :group "Educations"}
 
    {:name "Offering"
     :generalizes #{"ProgramOffering" "CourseOffering" "ComponentOffering"}}
+
    {:name "ProgramOffering"
     :file "schemas/ProgramOffering.yaml"
-    :extends "Offering"}
+    :extends "Offering"
+    :group "Offerings"}
    {:name "CourseOffering"
     :file "schemas/CourseOffering.yaml"
-    :extends "Offering"}
+    :extends "Offering"
+    :group "Offerings"}
    {:name "ComponentOffering"
     :file "schemas/ComponentOffering.yaml"
-    :extends "Offering"}
+    :extends "Offering"
+    :group "Offerings"}
+
+   {:name "Result"
+    :file "schemas/Result.yaml"}
 
    {:name "Association"
     :generalizes #{"ProgramOfferingAssociation" "CourseOfferingAssociation" "ComponentOfferingAssociation"}}
@@ -184,7 +195,7 @@
        (remove (fn [{:keys [properties]}] (empty? properties)))))
 
 (def always-remove
-  #{"academicSession" "building" "children" "component" "consumers" "coordinators" "course" "courseOffering" "educationSpecification" "ext" "newsFeeds" "organization" "parent" "program" "programOffering" "programs" "room" "year"})
+  #{"academicSession" "building" "children" "component" "consumers" "coordinators" "course" "courseOffering" "educationSpecification" "ext" "newsFeeds" "organization" "parent" "program" "programOffering" "programs" "room" "year" "result"})
 
 (def preferred-ordering
   ["academicSessionId" "associationId" "buildingId" "componentId" "courseId" "educationSpecificationId" "groupId" "newsFeedId" "newsItemId" "offeringId" "organizationId" "personId" "programId" "roomId"
@@ -205,9 +216,15 @@
 (def preferred-order
   (apply hash-map (interleave preferred-ordering (range))))
 
+(def indent-str "    ")
+
+(defn indent
+  [s]
+  (str/join "\n" (map #(str indent-str %) (str/split-lines s))))
+
 (defn str-prop
   [[name attrs]]
-  (str name ": " (get attrs "type" "unknown")))
+  (str indent-str "* " name ": " (get attrs "type" "unknown")))
 
 (defn render-component
   [component]
@@ -215,10 +232,11 @@
                    (remove (comp always-remove key))
                    (sort-by (fn [[k _]] (get preferred-order k))))
         str-props (str/join "\n" (map str-prop props))]
-    (str "[" (:name component)
-         "\n|\n"
+    (str "class " (:name component) " {"
+         "\n"
          str-props
-         "]")))
+         "\n"
+         "}")))
 
 (def relations
   [["EducationSpecification" "0..1 - 0..*" "Education"]
@@ -261,10 +279,33 @@
   [[from conn to]]
   (str "[" from "] " conn " [" to "]"))
 
+(->> components
+     (group-by :group)
+     #_(map render-component)
+     keys)
+
+(defn render-group
+  [components]
+  (str "together {\n"
+       (str/join "\n\n" (->> components
+                             (map render-component)
+                             (map indent)))
+
+       "}"))
+
+(render-group (val (first (group-by :group components))))
+
+
 (defn render
   []
-  (str (str/join "\n\n" (map render-component components))
-       "\n\n"
-       (str/join "\n\n" (map render-relation relations))))
+  (let [component-groups (group-by :group components)
+        components (get component-groups nil)
+        component-groups (dissoc component-groups nil)]
 
-(spit "nomnoml.txt" (render))
+    (str "@startuml\nallowmixing\n\n"
+         (str/join "\n\n" (map render-component components))
+         "\n\n"
+         #_(str/join "\n\n" (map render-relation relations))
+         "\n@enduml")))
+
+(spit "diagram.puml" (render))

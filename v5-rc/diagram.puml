@@ -1,0 +1,254 @@
+@startuml
+allowmixing
+
+class Education {
+    * primaryCode: unknown
+    * otherCodes: array
+    * name: array
+    * abbreviation: string
+    * description: array
+    * addresses: array
+    * assessment: array
+    * duration: string
+    * enrollment: array
+    * learningOutcomes: array
+    * modeOfDelivery: unknown
+    * resources: array
+    * teachingLanguage: string
+}
+
+class Program {
+    * programId: string
+    * programType: unknown
+    * admissionRequirements: array
+    * fieldsOfStudy: string
+    * firstStartDate: string
+    * level: unknown
+    * levelOfQualification: unknown
+    * link: string
+    * modeOfStudy: unknown
+    * qualificationAwarded: unknown
+    * qualificationRequirements: array
+    * sector: unknown
+    * studyLoad: unknown
+    * validFrom: string
+    * validTo: string
+}
+
+class Course {
+    * courseId: string
+    * admissionRequirements: array
+    * fieldsOfStudy: string
+    * firstStartDate: string
+    * level: unknown
+    * link: string
+    * qualificationRequirements: array
+    * studyLoad: unknown
+    * validFrom: string
+    * validTo: string
+}
+
+class Component {
+    * componentId: string
+    * componentType: unknown
+}
+
+class Offering {
+    * offeringId: string
+    * primaryCode: unknown
+    * otherCodes: array
+    * offeringType: string
+    * name: array
+    * abbreviation: string
+    * description: array
+    * addresses: array
+    * enrolledNumberStudents: number
+    * enrollEndDate: string
+    * enrollStartDate: string
+    * link: string
+    * maxNumberStudents: number
+    * minNumberStudents: number
+    * modeOfDelivery: unknown
+    * pendingNumberStudents: number
+    * priceInformation: array
+    * resultExpected: boolean
+    * resultValueType: unknown
+    * teachingLanguage: string
+}
+
+class ProgramOffering {
+    * endDate: string
+    * flexibleEntryPeriodEnd: string
+    * flexibleEntryPeriodStart: string
+    * startDate: string
+}
+
+class CourseOffering {
+    * endDate: string
+    * flexibleEntryPeriodEnd: string
+    * flexibleEntryPeriodStart: string
+    * startDate: string
+}
+
+class ComponentOffering {
+    * endDateTime: string
+    * resultWeight: integer
+    * startDateTime: string
+}
+
+class Result {
+    * pass: unknown
+    * comment: string
+    * score: string
+    * resultDate: string
+    * state: unknown
+}
+
+class Association {
+    * associationId: string
+    * associationType: string
+    * remoteState: unknown
+    * result: unknown
+    * role: unknown
+    * state: unknown
+}
+
+class AcademicSession {
+    * academicSessionId: string
+    * academicSessionType: unknown
+    * name: array
+    * endDate: string
+    * startDate: string
+}
+
+class Building {
+    * buildingId: string
+    * primaryCode: unknown
+    * otherCodes: array
+    * name: array
+    * abbreviation: string
+    * description: array
+    * address: unknown
+}
+
+class EducationSpecification {
+    * educationSpecificationId: string
+    * primaryCode: unknown
+    * otherCodes: array
+    * educationSpecificationType: unknown
+    * name: array
+    * abbreviation: string
+    * description: array
+    * fieldsOfStudy: string
+    * formalDocument: unknown
+    * learningOutcomes: array
+    * level: unknown
+    * levelOfQualification: unknown
+    * link: string
+    * sector: unknown
+    * studyLoad: unknown
+    * validFrom: string
+    * validTo: string
+}
+
+class Group {
+    * groupId: string
+    * primaryCode: unknown
+    * otherCodes: array
+    * groupType: unknown
+    * name: array
+    * description: array
+    * endDate: string
+    * personCount: number
+    * startDate: string
+}
+
+class NewsFeed {
+    * newsFeedId: string
+    * newsFeedType: string
+    * name: array
+    * description: array
+}
+
+class NewsItem {
+    * newsItemId: string
+    * newsItemType: unknown
+    * name: array
+    * authors: array
+    * content: array
+    * image: string
+    * lastModified: string
+    * link: string
+    * validFrom: string
+    * validUntil: string
+}
+
+class Organization {
+    * organizationId: string
+    * primaryCode: unknown
+    * otherCodes: array
+    * organizationType: unknown
+    * name: array
+    * shortName: string
+    * description: array
+    * addresses: array
+    * link: string
+    * logo: string
+}
+
+class Person {
+    * personId: string
+    * primaryCode: unknown
+    * otherCodes: array
+    * surname: string
+    * surnamePrefix: string
+    * givenName: string
+    * displayName: string
+    * titlePrefix: string
+    * titleSuffix: string
+    * activeEnrollment: boolean
+    * address: unknown
+    * affiliations: unknown
+    * cityOfBirth: string
+    * countryOfBirth: string
+    * dateOfBirth: string
+    * dateOfNationality: string
+    * gender: unknown
+    * ICEName: string
+    * ICEPhoneNumber: string
+    * ICERelation: unknown
+    * initials: string
+    * languageOfChoice: array
+    * mail: string
+    * mobileNumber: string
+    * nationality: string
+    * office: string
+    * photoOfficial: string
+    * photoSocial: string
+    * secondaryMail: string
+    * telephoneNumber: string
+}
+
+class Room {
+    * roomId: string
+    * primaryCode: unknown
+    * otherCodes: array
+    * roomType: unknown
+    * name: array
+    * abbreviation: string
+    * description: array
+    * availableSeats: integer
+    * floor: string
+    * geolocation: object
+    * totalSeats: integer
+    * wing: string
+}
+
+class Service {
+    * contactEmail: string
+    * documentation: string
+    * specification: string
+}
+
+
+@enduml
